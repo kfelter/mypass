@@ -19,3 +19,22 @@ import "github.com/felts94/mypass/cmd"
 func main() {
 	cmd.Execute()
 }
+
+// func main() {
+// 	password := password()
+// 	fmt.Printf("Password: %s\n", password)
+
+// }
+
+// // copy/pasterd https://stackoverflow.com/questions/2137357/getpasswd-functionality-in-go
+// func password() string {
+
+// 	fmt.Print("Enter Password: ")
+// 	bytePassword, err := terminal.ReadPassword(int(syscall.Stdin))
+// 	if err != nil {
+// 		panic(err)
+// 	}
+// 	password := string(bytePassword)
+
+// 	return strings.TrimSpace(password)
+// }
