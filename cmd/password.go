@@ -6,6 +6,7 @@ import (
 	"crypto/md5"
 	"crypto/rand"
 	"encoding/hex"
+	"encoding/json"
 	"fmt"
 	"io"
 	"io/ioutil"
@@ -15,6 +16,10 @@ import (
 
 	"golang.org/x/crypto/ssh/terminal"
 )
+
+type KeyRing struct {
+	Data map[string]string
+}
 
 // copy/pasterd https://stackoverflow.com/questions/2137357/getpasswd-functionality-in-go
 func password() string {
@@ -78,4 +83,17 @@ func encryptFile(filename string, data []byte, passphrase string) {
 func decryptFile(filename string, passphrase string) []byte {
 	data, _ := ioutil.ReadFile(filename)
 	return decrypt(data, passphrase)
+}
+
+func (kr *KeyRing) Bytes() []byte {
+	krData, _ := json.Marshal(kr.Data)
+	return krData
+}
+
+func KeyRingFromBytes(d []byte) KeyRing {
+	kr := make(map[string]string)
+	json.Unmarshal(d, &kr)
+	return KeyRing{
+		Data: kr,
+	}
 }

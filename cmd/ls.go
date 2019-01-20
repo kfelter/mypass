@@ -15,6 +15,10 @@
 package cmd
 
 import (
+	"fmt"
+	"os"
+	"text/tabwriter"
+
 	"github.com/spf13/cobra"
 )
 
@@ -25,11 +29,19 @@ var lsCmd = &cobra.Command{
 	Run: func(cmd *cobra.Command, args []string) {
 		//label, err := cmd.Flags().GetString("label")
 		password := password()
-		// if err != nil {
-		// 	panic(err)
-		// }
+		d := decryptFile("data", password)
+		kr := KeyRingFromBytes(d)
+		print("\n")
+		w := new(tabwriter.Writer)
 
-		println(string(decryptFile("data", password)))
+		// Format in tab-separated columns with a tab stop of 8.
+		w.Init(os.Stdout, 15, 8, 0, '\t', 0)
+		fmt.Fprintln(w, "label\t| password")
+		fmt.Fprintln(w, "---------------------------------------------------")
+		for key, v := range kr.Data {
+			fmt.Fprintln(w, key, "\t|", v)
+		}
+		w.Flush()
 	},
 }
 

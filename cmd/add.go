@@ -40,13 +40,16 @@ var addCmd = &cobra.Command{
 			println("\nPlease enter the password for " + label)
 			pass = password()
 		}
+		var kr KeyRing
 		if _, err := os.Stat("data"); os.IsNotExist(err) {
-			encryptFile("data", []byte(""), pwd)
+			kr.Data[label] = pass
+			encryptFile("data", kr.Bytes(), pwd)
+		} else {
+			d := decryptFile("data", pwd)
+			kr = KeyRingFromBytes(d)
+			kr.Data[label] = pass
+			encryptFile("data", kr.Bytes(), pwd)
 		}
-		d := decryptFile("data", pwd)
-		new_data := string(d) + "\n" + label + ": " + pass
-
-		encryptFile("data", []byte(new_data), pwd)
 		print("\n")
 	},
 }
